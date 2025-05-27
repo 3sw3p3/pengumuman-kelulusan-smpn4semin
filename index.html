@@ -267,7 +267,7 @@
             statusBadge.textContent = student.status;
             statusContainer.appendChild(statusBadge);
             
-            if (student.status === 'LULUS' && student.sklLink) {
+            if (student.status === 'LULUS') {
                 document.getElementById('download-btn').href = student.sklLink;
                 document.getElementById('download-section').style.display = 'block';
             } else {
