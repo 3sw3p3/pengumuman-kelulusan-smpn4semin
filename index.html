@@ -212,10 +212,10 @@
                         complete: function(results) {
                             studentData = results.data.map(row => ({
                                 nis: row['NIS'],
-                                name: row['Nama'],
+                                name: row['NAMA'],
                                 ttl: row['TTL'],
                                 status: row['LULUS/TIDAK LULUS'],
-                                sklLink: row['DOWNLOAD SKL']
+                                sklLink: row['SKL']
                             }));
                             resolve();
                         }
