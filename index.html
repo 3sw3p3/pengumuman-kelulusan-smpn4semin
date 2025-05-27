@@ -1,1 +1,304 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pengumuman Kelulusan SMP Negeri 4 Semin 2025</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a0ca3;
+            --success: #4cc9f0;
+            --danger: #f72585;
+            --light: #f8f9fa;
+            --dark: #212529;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            color: var(--dark);
+        }
+        
+        .card {
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: none;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+        
+        .card-header {
+            background: linear-gradient(to right, var(--primary), var(--primary-dark));
+            color: white;
+            font-weight: 600;
+            text-align: center;
+            padding: 1.5rem;
+            border-bottom: none;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            border-color: var(--primary);
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            border-color: var(--primary-dark);
+        }
+        
+        .btn-download {
+            background-color: var(--success);
+            border-color: var(--success);
+            color: var(--dark);
+            font-weight: 500;
+        }
+        
+        .btn-download:hover {
+            background-color: #3aa8d8;
+            border-color: #3aa8d8;
+        }
+        
+        .result-container {
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .status-badge {
+            font-weight: 600;
+            padding: 8px 20px;
+            border-radius: 50px;
+            display: inline-block;
+            margin: 10px 0;
+        }
+        
+        .lulus {
+            background-color: rgba(76, 201, 240, 0.2);
+            color: var(--success);
+        }
+        
+        .tidak-lulus {
+            background-color: rgba(247, 37, 133, 0.2);
+            color: var(--danger);
+        }
+        
+        .school-logo {
+            height: 80px;
+            margin-bottom: 1rem;
+        }
+        
+        .info-box {
+            background-color: rgba(248, 249, 250, 0.7);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            padding: 1.5rem;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        .spinner {
+            display: none;
+            width: 2rem;
+            height: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="text-center mb-5">
+                    <img src="https://via.placeholder.com/80x80?text=LOGO" alt="Logo SMPN 4 Semin" class="school-logo">
+                    <h2 class="fw-bold">SMP NEGERI 4 SEMIN</h2>
+                    <h4 class="text-muted">PENGUMUMAN KELULUSAN TAHUN 2025</h4>
+                    <p class="text-muted mt-2">Tahun Pelajaran 2024/2025</p>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="mb-0"><i class="bi bi-mortarboard"></i> CEK HASIL KELULUSAN</h4>
+                    </div>
+                    <div class="card-body p-4">
+                        <div id="login-form">
+                            <div class="mb-4">
+                                <label for="nis-input" class="form-label fw-bold">MASUKKAN NOMOR INDUK SISWA (NIS)</label>
+                                <input type="text" class="form-control form-control-lg" id="nis-input" placeholder="Contoh: 12345">
+                                <div class="form-text">Masukkan NIS yang diberikan sekolah</div>
+                            </div>
+                            <button id="check-btn" class="btn btn-primary w-100 py-2">
+                                <span id="btn-text">CEK HASIL</span>
+                                <div id="spinner" class="spinner-border spinner-border-sm text-light ms-2" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </button>
+                        </div>
+                        
+                        <div id="result-container" class="result-container mt-4">
+                            <div class="text-center mb-4">
+                                <h4 id="student-name" class="fw-bold mb-1"></h4>
+                                <div id="status-container" class="my-3"></div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <div class="info-box">
+                                        <small class="text-muted">NIS</small>
+                                        <div id="student-nis" class="fw-bold fs-5"></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="info-box">
+                                        <small class="text-muted">TEMPAT, TANGGAL LAHIR</small>
+                                        <div id="student-ttl" class="fw-bold fs-5"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div id="download-section" class="text-center mt-4 mb-3">
+                                <a id="download-btn" href="#" class="btn btn-download btn-lg py-2 px-4">
+                                    <i class="bi bi-cloud-arrow-down"></i> DOWNLOAD SKL
+                                </a>
+                            </div>
+                            
+                            <div class="text-center mt-4">
+                                <button id="back-btn" class="btn btn-outline-secondary">
+                                    <i class="bi bi-arrow-left"></i> KEMBALI
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <footer>
+                    <p class="mb-0">© 2025 SMP Negeri 4 Semin. Hak Cipta Dilindungi.</p>
+                    <p class="mb-0">Dikelola oleh Panitia Kelulusan SMPN 4 Semin</p>
+                </footer>
+            </div>
+        </div>
+    </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+    <script>
+        // Data siswa
+        let studentData = [];
+        
+        // Load data dari Google Spreadsheet
+        async function loadStudentData() {
+            const spreadsheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT9gsoHdsX2RGUQ-udFQ4L_MJNtxfBMTJ9_oTXKFDG9D4SLGygg1NQJMe2wbi44KuuKlASYKCRfozrg/pub?output=csv';
+            
+            try {
+                const response = await fetch(spreadsheetUrl);
+                const csvData = await response.text();
+                
+                return new Promise((resolve) => {
+                    Papa.parse(csvData, {
+                        header: true,
+                        complete: function(results) {
+                            studentData = results.data.map(row => ({
+                                nis: row['NIS'],
+                                name: row['Nama'],
+                                ttl: row['TTL'],
+                                status: row['LULUS/TIDAK LULUS'],
+                                sklLink: row['DOWNLOAD SKL']
+                            }));
+                            resolve();
+                        }
+                    });
+                });
+            } catch (error) {
+                console.error('Error loading data:', error);
+                alert('Gagal memuat data. Silakan coba lagi nanti.');
+            }
+        }
+        
+        // Cari siswa berdasarkan NIS
+        function findStudentByNIS(nis) {
+            return studentData.find(student => student.nis === nis);
+        }
+        
+        // Tampilkan hasil
+        function showResult(student) {
+            document.getElementById('student-name').textContent = student.name;
+            document.getElementById('student-nis').textContent = student.nis;
+            document.getElementById('student-ttl').textContent = student.ttl;
+            
+            const statusContainer = document.getElementById('status-container');
+            statusContainer.innerHTML = '';
+            
+            const statusBadge = document.createElement('div');
+            statusBadge.className = `status-badge ${student.status === 'LULUS' ? 'lulus' : 'tidak-lulus'}`;
+            statusBadge.textContent = student.status;
+            statusContainer.appendChild(statusBadge);
+            
+            if (student.status === 'LULUS' && student.sklLink) {
+                document.getElementById('download-btn').href = student.sklLink;
+                document.getElementById('download-section').style.display = 'block';
+            } else {
+                document.getElementById('download-section').style.display = 'none';
+            }
+            
+            document.getElementById('login-form').style.display = 'none';
+            document.getElementById('result-container').style.display = 'block';
+        }
+        
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Load data saat halaman dimuat
+            await loadStudentData();
+            
+            // Cek hasil
+            document.getElementById('check-btn').addEventListener('click', function() {
+                const nisInput = document.getElementById('nis-input').value.trim();
+                
+                if (!nisInput) {
+                    alert('Silakan masukkan NIS Anda');
+                    return;
+                }
+                
+                // Tampilkan loading spinner
+                document.getElementById('btn-text').style.display = 'none';
+                document.getElementById('spinner').style.display = 'inline-block';
+                
+                // Simulasi loading
+                setTimeout(() => {
+                    const student = findStudentByNIS(nisInput);
+                    
+                    // Sembunyikan loading spinner
+                    document.getElementById('btn-text').style.display = 'inline';
+                    document.getElementById('spinner').style.display = 'none';
+                    
+                    if (student) {
+                        showResult(student);
+                    } else {
+                        alert('NIS tidak ditemukan. Silakan periksa kembali NIS Anda.');
+                    }
+                }, 800);
+            });
+            
+            // Kembali ke form
+            document.getElementById('back-btn').addEventListener('click', function() {
+                document.getElementById('login-form').style.display = 'block';
+                document.getElementById('result-container').style.display = 'none';
+                document.getElementById('nis-input').value = '';
+                document.getElementById('nis-input').focus();
+            });
+        });
+    </script>
+</body>
+</html>
