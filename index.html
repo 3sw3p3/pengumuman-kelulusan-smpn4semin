@@ -116,12 +116,6 @@
             width: 2rem;
             height: 2rem;
         }
-        
-        .error-message {
-            color: var(--danger);
-            font-size: 0.9rem;
-            margin-top: 5px;
-        }
     </style>
 </head>
 <body>
@@ -144,7 +138,7 @@
                             <div class="mb-4">
                                 <label for="nis-input" class="form-label fw-bold">MASUKKAN NOMOR INDUK SISWA (NIS)</label>
                                 <input type="text" class="form-control form-control-lg" id="nis-input" placeholder="Contoh: 12345">
-                                <div id="nis-error" class="error-message"></div>
+                                <div class="form-text">Masukkan NIS yang diberikan sekolah</div>
                             </div>
                             <button id="check-btn" class="btn btn-primary w-100 py-2">
                                 <span id="btn-text">CEK HASIL</span>
@@ -209,141 +203,92 @@
             const spreadsheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT9gsoHdsX2RGUQ-udFQ4L_MJNtxfBMTJ9_oTXKFDG9D4SLGygg1NQJMe2wbi44KuuKlASYKCRfozrg/pub?output=csv';
             
             try {
-                console.log("Memulai pengambilan data dari spreadsheet...");
                 const response = await fetch(spreadsheetUrl);
-                
-                if (!response.ok) {
-                    throw new Error(`Gagal mengambil data. Status: ${response.status}`);
-                }
-                
                 const csvData = await response.text();
-                console.log("Data CSV berhasil diambil:", csvData.substring(0, 100) + "...");
                 
-                return new Promise((resolve, reject) => {
+                return new Promise((resolve) => {
                     Papa.parse(csvData, {
                         header: true,
-                        skipEmptyLines: true,
                         complete: function(results) {
-                            console.log("Total data yang ditemukan:", results.data.length);
-                            
-                            studentData = results.data.map((row, index) => {
-                                // Debug: Log beberapa baris pertama
-                                if (index < 3) {
-                                    console.log(`Contoh data baris ${index + 1}:`, row);
-                                }
-                                
-                                return {
-                                    nis: row['NIS']?.toString().trim() || '',
-                                    name: row['Nama']?.toString().trim() || '',
-                                    ttl: row['TTL']?.toString().trim() || '',
-                                    status: row['LULUS/TIDAK LULUS']?.toString().trim().toUpperCase() || '',
-                                    sklLink: row['DOWNLOAD SKL']?.toString().trim() || ''
-                                };
-                            });
-                            
-                            console.log("Data siswa yang telah diproses:", studentData.slice(0, 3));
+                            studentData = results.data.map(row => ({
+                                nis: row['NIS'],
+                                name: row['Nama'],
+                                ttl: row['TTL'],
+                                status: row['LULUS/TIDAK LULUS'],
+                                sklLink: row['DOWNLOAD SKL']
+                            }));
                             resolve();
-                        },
-                        error: function(error) {
-                            console.error("Error parsing CSV:", error);
-                            reject(error);
                         }
                     });
                 });
             } catch (error) {
                 console.error('Error loading data:', error);
-                document.getElementById('nis-error').textContent = 'Gagal memuat data. Silakan coba lagi nanti.';
-                throw error;
+                alert('Gagal memuat data. Silakan coba lagi nanti.');
             }
         }
         
         // Cari siswa berdasarkan NIS
         function findStudentByNIS(nis) {
-            const foundStudent = studentData.find(student => student.nis === nis.toString().trim());
-            console.log("Hasil pencarian untuk NIS:", nis, "Ditemukan:", foundStudent);
-            return foundStudent;
+            return studentData.find(student => student.nis === nis);
         }
         
         // Tampilkan hasil
         function showResult(student) {
-            console.log("Menampilkan hasil untuk:", student);
-            
-            if (!student) {
-                document.getElementById('nis-error').textContent = 'NIS tidak ditemukan. Silakan periksa kembali.';
-                return;
-            }
-            
-            document.getElementById('student-name').textContent = student.name || 'Data tidak tersedia';
-            document.getElementById('student-nis').textContent = student.nis || 'Data tidak tersedia';
-            document.getElementById('student-ttl').textContent = student.ttl || 'Data tidak tersedia';
+            document.getElementById('student-name').textContent = student.name;
+            document.getElementById('student-nis').textContent = student.nis;
+            document.getElementById('student-ttl').textContent = student.ttl;
             
             const statusContainer = document.getElementById('status-container');
             statusContainer.innerHTML = '';
             
-            if (student.status) {
-                const statusBadge = document.createElement('div');
-                statusBadge.className = `status-badge ${student.status.includes('LULUS') ? 'lulus' : 'tidak-lulus'}`;
-                statusBadge.textContent = student.status;
-                statusContainer.appendChild(statusBadge);
-            }
+            const statusBadge = document.createElement('div');
+            statusBadge.className = `status-badge ${student.status === 'LULUS' ? 'lulus' : 'tidak-lulus'}`;
+            statusBadge.textContent = student.status;
+            statusContainer.appendChild(statusBadge);
             
-            if (student.status.includes('LULUS') && student.sklLink) {
+            if (student.status === 'LULUS' && student.sklLink) {
                 document.getElementById('download-btn').href = student.sklLink;
                 document.getElementById('download-section').style.display = 'block';
-                console.log("Tombol download diaktifkan dengan link:", student.sklLink);
             } else {
                 document.getElementById('download-section').style.display = 'none';
             }
             
             document.getElementById('login-form').style.display = 'none';
             document.getElementById('result-container').style.display = 'block';
-            document.getElementById('nis-error').textContent = '';
         }
         
         // Event listeners
         document.addEventListener('DOMContentLoaded', async function() {
-            console.log("Dokumen siap, memuat data...");
-            
             // Load data saat halaman dimuat
-            try {
-                await loadStudentData();
-                console.log("Data berhasil dimuat. Siap menerima input.");
-            } catch (error) {
-                console.error("Gagal memuat data:", error);
-            }
+            await loadStudentData();
             
             // Cek hasil
-            document.getElementById('check-btn').addEventListener('click', async function() {
+            document.getElementById('check-btn').addEventListener('click', function() {
                 const nisInput = document.getElementById('nis-input').value.trim();
-                const errorElement = document.getElementById('nis-error');
                 
                 if (!nisInput) {
-                    errorElement.textContent = 'Silakan masukkan NIS Anda';
+                    alert('Silakan masukkan NIS Anda');
                     return;
                 }
-                
-                console.log("Memeriksa NIS:", nisInput);
                 
                 // Tampilkan loading spinner
                 document.getElementById('btn-text').style.display = 'none';
                 document.getElementById('spinner').style.display = 'inline-block';
-                errorElement.textContent = '';
                 
-                try {
-                    // Beri sedikit delay untuk animasi
-                    await new Promise(resolve => setTimeout(resolve, 500));
-                    
+                // Simulasi loading
+                setTimeout(() => {
                     const student = findStudentByNIS(nisInput);
-                    showResult(student);
                     
-                } catch (error) {
-                    console.error("Error saat memeriksa NIS:", error);
-                    errorElement.textContent = 'Terjadi kesalahan. Silakan coba lagi.';
-                } finally {
                     // Sembunyikan loading spinner
                     document.getElementById('btn-text').style.display = 'inline';
                     document.getElementById('spinner').style.display = 'none';
-                }
+                    
+                    if (student) {
+                        showResult(student);
+                    } else {
+                        alert('NIS tidak ditemukan. Silakan periksa kembali NIS Anda.');
+                    }
+                }, 800);
             });
             
             // Kembali ke form
@@ -352,13 +297,6 @@
                 document.getElementById('result-container').style.display = 'none';
                 document.getElementById('nis-input').value = '';
                 document.getElementById('nis-input').focus();
-            });
-            
-            // Enter key untuk memudahkan input
-            document.getElementById('nis-input').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    document.getElementById('check-btn').click();
-                }
             });
         });
     </script>
