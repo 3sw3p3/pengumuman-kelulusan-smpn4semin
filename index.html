@@ -197,35 +197,56 @@
     <script>
         // Data siswa
         let studentData = [];
-        
-        // Load data dari Google Spreadsheet
-        async function loadStudentData() {
-            const spreadsheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT9gsoHdsX2RGUQ-udFQ4L_MJNtxfBMTJ9_oTXKFDG9D4SLGygg1NQJMe2wbi44KuuKlASYKCRfozrg/pub?output=csv';
+  
+  async function loadStudentData() {
+    const spreadsheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT9gsoHdsX2RGUQ-udFQ4L_MJNtxfBMTJ9_oTXKFDG9D4SLGygg1NQJMe2wbi44KuuKlASYKCRfozrg/pub?output=csv';
+    
+    try {
+      console.log("Memulai pengambilan data...");
+      const response = await fetch(spreadsheetUrl);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const csvData = await response.text();
+      console.log("Data CSV berhasil diambil:", csvData.substring(0, 100) + "...");
+      
+      return new Promise((resolve, reject) => {
+        Papa.parse(csvData, {
+          header: true,
+          skipEmptyLines: true,
+          complete: function(results) {
+            console.log("Data yang di-parse:", results.data);
             
-            try {
-                const response = await fetch(spreadsheetUrl);
-                const csvData = await response.text();
-                
-                return new Promise((resolve) => {
-                    Papa.parse(csvData, {
-                        header: true,
-                        complete: function(results) {
-                            studentData = results.data.map(row => ({
-                                nis: row['NIS'],
-                                name: row['Nama'],
-                                ttl: row['TTL'],
-                                status: row['LULUS/TIDAK LULUS'],
-                                sklLink: row['DOWNLOAD SKL']
-                            }));
-                            resolve();
-                        }
-                    });
-                });
-            } catch (error) {
-                console.error('Error loading data:', error);
-                alert('Gagal memuat data. Silakan coba lagi nanti.');
-            }
-        }
+            studentData = results.data.map(row => {
+              // Debug: Tampilkan struktur row
+              console.log("Baris saat ini:", row);
+              
+              return {
+                nis: row['NIS'] || row['nis'] || row['Kolom C'] || '',
+                name: row['Nama'] || row['nama'] || row['Kolom D'] || '',
+                ttl: row['TTL'] || row['ttl'] || row['Kolom E'] || '',
+                status: row['LULUS/TIDAK LULUS'] || row['status'] || row['Kolom F'] || '',
+                sklLink: row['DOWNLOAD SKL'] || row['skl'] || row['Kolom G'] || ''
+              };
+            });
+            
+            console.log("Data siswa yang diproses:", studentData);
+            resolve();
+          },
+          error: function(error) {
+            console.error("Error parsing CSV:", error);
+            reject(error);
+          }
+        });
+      });
+    } catch (error) {
+      console.error('Error loading data:', error);
+      alert('Gagal memuat data. Silakan buka console (F12) untuk detail error.');
+      throw error;
+    }
+  }
         
         // Cari siswa berdasarkan NIS
         function findStudentByNIS(nis) {
