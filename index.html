@@ -212,10 +212,10 @@
                         complete: function(results) {
                             studentData = results.data.map(row => ({
                                 nis: row['NIS'],
-                                name: row['Nama'],
+                                name: row['NAMA'],
                                 ttl: row['TTL'],
                                 status: row['LULUS/TIDAK LULUS'],
-                                sklLink: row['DOWNLOAD SKL']
+                                sklLink: row['SKL']
                             }));
                             resolve();
                         }
@@ -237,6 +237,7 @@
             document.getElementById('student-name').textContent = student.name;
             document.getElementById('student-nis').textContent = student.nis;
             document.getElementById('student-ttl').textContent = student.ttl;
+            document.getElementById('download-btn').href = student.sklLink;
             
             const statusContainer = document.getElementById('status-container');
             statusContainer.innerHTML = '';
@@ -246,13 +247,7 @@
             statusBadge.textContent = student.status;
             statusContainer.appendChild(statusBadge);
             
-            if (student.status === 'LULUS' && student.sklLink) {
-                document.getElementById('download-btn').href = student.sklLink;
-                document.getElementById('download-section').style.display = 'block';
-            } else {
-                document.getElementById('download-section').style.display = 'none';
-            }
-            
+                  
             document.getElementById('login-form').style.display = 'none';
             document.getElementById('result-container').style.display = 'block';
         }
