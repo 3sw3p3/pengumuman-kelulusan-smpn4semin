@@ -215,7 +215,10 @@
                                 name: row['NAMA'],
                                 ttl: row['TTL'],
                                 status: row['LULUS/TIDAK LULUS'],
-                                sklLink: row['SKL']
+                                sklLink: row['SKL'],
+                                lit: row['LIT'],
+                                num: row['NUM'],
+                                sains: row['SAINS']
                             }));
                             resolve();
                         }
@@ -237,6 +240,9 @@
             document.getElementById('student-name').textContent = student.name;
             document.getElementById('student-nis').textContent = student.nis;
             document.getElementById('student-ttl').textContent = student.ttl;
+            document.getElementById('student-lit').textContent = student.lit;
+            document.getElementById('student-num').textContent = student.num;
+            document.getElementById('student-sains').textContent = student.sains;
             document.getElementById('download-btn').href = student.sklLink;
             
             const statusContainer = document.getElementById('status-container');
