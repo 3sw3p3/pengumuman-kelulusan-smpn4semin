@@ -242,38 +242,11 @@
         // Data siswa
         let studentData = [];
         
-        // Contoh data siswa (akan diganti dengan data dari spreadsheet)
-        const sampleData = [
-            {
-                nis: "12345",
-                name: "ANANDA PUTRI MAHARANI",
-                ttl: "Gunung Kidul, 15 Januari 2010",
-                status: "LULUS",
-                sklLink: "https://example.com/skl-12345.pdf",
-                lit: "85",
-                num: "78",
-                sains: "92"
-            },
-            {
-                nis: "12346",
-                name: "BUDI SANTOSO",
-                ttl: "Semin, 20 Maret 2010",
-                status: "LULUS",
-                sklLink: "https://example.com/skl-12346.pdf",
-                lit: "72",
-                num: "88",
-                sains: "75"
-            }
-        ];
-        
+               
         // Load data dari Google Spreadsheet
         async function loadStudentData() {
-            // Untuk demo, gunakan sample data
-            studentData = sampleData;
-            return;
+                       
             
-            // Kode asli untuk mengambil data dari Google Spreadsheet:
-            /*
             const spreadsheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT9gsoHdsX2RGUQ-udFQ4L_MJNtxfBMTJ9_oTXKFDG9D4SLGygg1NQJMe2wbi44KuuKlASYKCRfozrg/pub?output=csv';
             
             try {
@@ -302,7 +275,7 @@
                 console.error('Error loading data:', error);
                 alert('Gagal memuat data. Silakan coba lagi nanti.');
             }
-            */
+            
         }
         
         // Cari siswa berdasarkan NIS
