@@ -258,14 +258,14 @@
                         header: true,
                         complete: function(results) {
                             studentData = results.data.map(row => ({
-                                nis: row['NIS'] || '',
-                                name: row['NAMA'] || '',
-                                ttl: row['TTL'] || '',
-                                status: row['STATUS'] || row['LULUS/TIDAK LULUS'] || '',
-                                sklLink: row['SKL'] || row['LINK_SKL'] || '#',
-                                lit: row['LIT'] || row['LITERASI'] || '0',
-                                num: row['NUM'] || row['NUMERASI'] || '0',
-                                sains: row['SAINS'] || '0'
+                               nis: row['NIS'],
+                                name: row['NAMA'],
+                                ttl: row['TTL'],
+                                status: row['LULUS/TIDAK LULUS'],
+                                sklLink: row['SKL'],
+                                lit: row['LIT'],
+                                num: row['NUM'],
+                                sains: row['SAINS']
                             }));
                             resolve();
                         }
