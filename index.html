@@ -116,6 +116,27 @@
             width: 2rem;
             height: 2rem;
         }
+        
+        .score-box {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            height: 100%;
+        }
+        
+        .score-title {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-bottom: 5px;
+        }
+        
+        .score-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
     </style>
 </head>
 <body>
@@ -168,30 +189,34 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <div class="info-box">
-                                        <small class="text-muted">LITERASI</small>
-                                        <div id="student-lit" class="fw-bold fs-5"></div>
+                            
+                            <h5 class="text-center mb-3 mt-4">HASIL ASESMEN</h5>
+                            <div class="row g-3 mb-4">
+                                <div class="col-md-4">
+                                    <div class="score-box">
+                                        <div class="score-title">LITERASI</div>
+                                        <div id="student-lit" class="score-value"></div>
                                     </div>
                                 </div>
-                                <div class="col-md-6 mb-3">
-                                    <div class="info-box">
-                                        <small class="text-muted">NUMERASI</small>
-                                        <div id="student-num" class="fw-bold fs-5"></div>
+                                <div class="col-md-4">
+                                    <div class="score-box">
+                                        <div class="score-title">NUMERASI</div>
+                                        <div id="student-num" class="score-value"></div>
                                     </div>
                                 </div>
-                                <div class="col-md-6 mb-3">
-                                    <div class="info-box">
-                                        <small class="text-muted">SAINS</small>
-                                        <div id="student-sains" class="fw-bold fs-5"></div>
+                                <div class="col-md-4">
+                                    <div class="score-box">
+                                        <div class="score-title">SAINS</div>
+                                        <div id="student-sains" class="score-value"></div>
                                     </div>
                                 </div>
                             </div>
+                            
                             <div id="download-section" class="text-center mt-4 mb-3">
                                 <a id="download-btn" href="#" class="btn btn-download btn-lg py-2 px-4">
                                     <i class="bi bi-cloud-arrow-down"></i> DOWNLOAD SKL
                                 </a>
+                                <p class="text-muted mt-2">Surat Keterangan Lulus (PDF)</p>
                             </div>
                             
                             <div class="text-center mt-4">
@@ -217,8 +242,38 @@
         // Data siswa
         let studentData = [];
         
+        // Contoh data siswa (akan diganti dengan data dari spreadsheet)
+        const sampleData = [
+            {
+                nis: "12345",
+                name: "ANANDA PUTRI MAHARANI",
+                ttl: "Gunung Kidul, 15 Januari 2010",
+                status: "LULUS",
+                sklLink: "https://example.com/skl-12345.pdf",
+                lit: "85",
+                num: "78",
+                sains: "92"
+            },
+            {
+                nis: "12346",
+                name: "BUDI SANTOSO",
+                ttl: "Semin, 20 Maret 2010",
+                status: "LULUS",
+                sklLink: "https://example.com/skl-12346.pdf",
+                lit: "72",
+                num: "88",
+                sains: "75"
+            }
+        ];
+        
         // Load data dari Google Spreadsheet
         async function loadStudentData() {
+            // Untuk demo, gunakan sample data
+            studentData = sampleData;
+            return;
+            
+            // Kode asli untuk mengambil data dari Google Spreadsheet:
+            /*
             const spreadsheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT9gsoHdsX2RGUQ-udFQ4L_MJNtxfBMTJ9_oTXKFDG9D4SLGygg1NQJMe2wbi44KuuKlASYKCRfozrg/pub?output=csv';
             
             try {
@@ -230,14 +285,14 @@
                         header: true,
                         complete: function(results) {
                             studentData = results.data.map(row => ({
-                                nis: row['NIS'],
-                                name: row['NAMA'],
-                                ttl: row['TTL'],
-                                status: row['LULUS/TIDAK LULUS'],
-                                sklLink: row['SKL'],
-                                lit: row['LIT'],
-                                num: row['NUM'],
-                                sains: row['SAINS']
+                                nis: row['NIS'] || '',
+                                name: row['NAMA'] || '',
+                                ttl: row['TTL'] || '',
+                                status: row['STATUS'] || row['LULUS/TIDAK LULUS'] || '',
+                                sklLink: row['SKL'] || row['LINK_SKL'] || '#',
+                                lit: row['LIT'] || row['LITERASI'] || '0',
+                                num: row['NUM'] || row['NUMERASI'] || '0',
+                                sains: row['SAINS'] || '0'
                             }));
                             resolve();
                         }
@@ -247,6 +302,7 @@
                 console.error('Error loading data:', error);
                 alert('Gagal memuat data. Silakan coba lagi nanti.');
             }
+            */
         }
         
         // Cari siswa berdasarkan NIS
@@ -262,7 +318,15 @@
             document.getElementById('student-lit').textContent = student.lit;
             document.getElementById('student-num').textContent = student.num;
             document.getElementById('student-sains').textContent = student.sains;
-            document.getElementById('download-btn').href = student.sklLink;
+            
+            // Update link download
+            const downloadBtn = document.getElementById('download-btn');
+            if (student.sklLink && student.sklLink !== '#') {
+                downloadBtn.href = student.sklLink;
+                downloadBtn.style.display = 'inline-block';
+            } else {
+                downloadBtn.style.display = 'none';
+            }
             
             const statusContainer = document.getElementById('status-container');
             statusContainer.innerHTML = '';
@@ -272,7 +336,6 @@
             statusBadge.textContent = student.status;
             statusContainer.appendChild(statusBadge);
             
-                  
             document.getElementById('login-form').style.display = 'none';
             document.getElementById('result-container').style.display = 'block';
         }
@@ -317,6 +380,13 @@
                 document.getElementById('result-container').style.display = 'none';
                 document.getElementById('nis-input').value = '';
                 document.getElementById('nis-input').focus();
+            });
+            
+            // Enter key untuk memicu pencarian
+            document.getElementById('nis-input').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    document.getElementById('check-btn').click();
+                }
             });
         });
     </script>
