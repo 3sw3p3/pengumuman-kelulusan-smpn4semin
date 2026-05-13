@@ -38,93 +38,79 @@
             font-weight: 600;
             text-align: center;
             padding: 1.5rem;
-            border-bottom: none;
         }
         
-        .btn-primary {
-            background-color: var(--primary);
-            border-color: var(--primary);
-        }
+        .btn-primary { background-color: var(--primary); border-color: var(--primary); }
+        .btn-download { background-color: var(--success); border-color: var(--success); color: var(--dark); font-weight: 500; }
         
-        .btn-download {
-            background-color: var(--success);
-            border-color: var(--success);
-            color: var(--dark);
-            font-weight: 500;
-        }
-        
-        .result-container {
-            display: none;
-            animation: fadeIn 0.5s ease-out;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        .result-container { display: none; animation: fadeIn 0.5s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         
         .status-badge {
             font-weight: 600;
-            padding: 8px 20px;
+            padding: 8px 25px;
             border-radius: 50px;
             display: inline-block;
             margin: 10px 0;
             text-transform: uppercase;
+            font-size: 1.1rem;
         }
         
-        .lulus { background-color: rgba(76, 201, 240, 0.2); color: #0077b6; }
-        .tidak-lulus { background-color: rgba(247, 37, 133, 0.2); color: var(--danger); }
+        .lulus { background-color: rgba(76, 201, 240, 0.2); color: #0077b6; border: 2px solid #4cc9f0; }
+        .tidak-lulus { background-color: rgba(247, 37, 133, 0.2); color: var(--danger); border: 2px solid #f72585; }
         
         .school-logo { height: 80px; margin-bottom: 1rem; }
-        .info-box { background-color: rgba(248, 249, 250, 0.8); border-radius: 10px; padding: 15px; margin-bottom: 15px; }
-        .score-box { background: white; border-radius: 10px; padding: 15px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); text-align: center; height: 100%; }
-        .score-value { font-size: 1.5rem; font-weight: 600; color: var(--primary-dark); }
+        .info-box { background-color: rgba(248, 249, 250, 0.8); border-radius: 10px; padding: 15px; margin-bottom: 15px; border-left: 4px solid var(--primary); }
         
-        footer { text-align: center; padding: 1.5rem; color: #6c757d; font-size: 0.9rem; }
+        .score-box { background: white; border-radius: 12px; padding: 15px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); text-align: center; height: 100%; border: 1px solid #eee; }
+        .score-title { font-size: 0.75rem; font-weight: 700; color: #6c757d; margin-bottom: 5px; }
+        .score-value { font-size: 1.4rem; font-weight: 700; color: var(--primary-dark); }
+        
+        footer { text-align: center; padding: 2rem; color: #6c757d; font-size: 0.85rem; }
     </style>
 </head>
 <body>
     <div class="container py-5">
         <div class="row justify-content-center">
-            <div class="col-lg-8">
+            <div class="col-lg-9">
                 <div class="text-center mb-5">
                     <img src="Logo SMP 4 Semin.png" alt="Logo SMPN 4 Semin" class="school-logo">
                     <h2 class="fw-bold">SMP NEGERI 4 SEMIN</h2>
                     <h4 class="text-muted">PENGUMUMAN KELULUSAN TAHUN 2026</h4>
-                    <p class="text-muted mt-2">Tahun Pelajaran 2025/2026</p>
+                    <p class="text-muted">Tahun Pelajaran 2025/2026</p>
                 </div>
                 
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="mb-0"><i class="bi bi-lock-fill"></i> LOGIN SISWA</h4>
+                        <h4 class="mb-0"><i class="bi bi-person-check-fill"></i> LOGIN AKSES PENGUMUMAN</h4>
                     </div>
                     <div class="card-body p-4">
                         <div id="login-form">
                             <div class="mb-3">
                                 <label for="nis-input" class="form-label fw-bold">NOMOR INDUK SISWA (NIS)</label>
-                                <input type="text" class="form-control form-control-lg" id="nis-input" placeholder="Masukkan NIS">
+                                <input type="text" class="form-control form-control-lg" id="nis-input" placeholder="Masukkan NIS Anda">
                             </div>
                             <div class="mb-4">
-                                <label for="tgllahir-input" class="form-label fw-bold">TANGGAL LAHIR</label>
+                                <label for="tgllahir-input" class="form-label fw-bold">TEMPAT, TANGGAL LAHIR</label>
                                 <input type="text" class="form-control form-control-lg" id="tgllahir-input" placeholder="Contoh: Semin, 12 Mei 2011">
-                                <div class="form-text">Format harus sama persis dengan data sekolah (Tempat, Tanggal Bulan Tahun)</div>
+                                <div class="form-text text-danger">*Gunakan koma dan spasi. Contoh: Semin, 12 Mei 2011</div>
                             </div>
-                            <button id="check-btn" class="btn btn-primary w-100 py-2">
-                                <span id="btn-text">CEK HASIL KELULUSAN</span>
+                            <button id="check-btn" class="btn btn-primary w-100 py-3 fw-bold">
+                                <span id="btn-text">CEK HASIL SEKARANG</span>
                                 <div id="spinner" class="spinner-border spinner-border-sm text-light ms-2" style="display:none" role="status"></div>
                             </button>
                         </div>
                         
-                        <div id="result-container" class="result-container mt-4">
+                        <div id="result-container" class="result-container mt-2">
                             <div class="text-center mb-4">
-                                <h4 id="student-name" class="fw-bold mb-1"></h4>
-                                <div id="status-container" class="my-3"></div>
+                                <h3 id="student-name" class="fw-bold text-uppercase color-primary-dark"></h3>
+                                <div id="status-container"></div>
                             </div>
                             
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <div class="info-box">
-                                        <small class="text-muted">NIS</small>
+                                        <small class="text-muted">NOMOR INDUK SISWA</small>
                                         <div id="student-nis" class="fw-bold fs-5"></div>
                                     </div>
                                 </div>
@@ -136,36 +122,43 @@
                                 </div>
                             </div>
                             
-                            <h5 class="text-center mb-3 mt-4">HASIL ASPD</h5>
+                            <h5 class="text-center mb-3 mt-4 fw-bold"><i class="bi bi-file-earmark-bar-graph"></i> PEROLEHAN NILAI</h5>
                             <div class="row g-3 mb-4">
-                                <div class="col-md-4">
+                                <div class="col-6 col-md-3">
                                     <div class="score-box">
-                                        <div class="text-muted small">LITERASI</div>
-                                        <div id="student-lit" class="score-value"></div>
+                                        <div class="score-title">BHS INDO</div>
+                                        <div id="student-indo" class="score-value">-</div>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-6 col-md-3">
                                     <div class="score-box">
-                                        <div class="text-muted small">NUMERASI</div>
-                                        <div id="student-num" class="score-value"></div>
+                                        <div class="score-title">MTK</div>
+                                        <div id="student-mtk" class="score-value">-</div>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-6 col-md-3">
                                     <div class="score-box">
-                                        <div class="text-muted small">SAINS</div>
-                                        <div id="student-sains" class="score-value"></div>
+                                        <div class="score-title">IPA</div>
+                                        <div id="student-ipa" class="score-value">-</div>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <div class="score-box">
+                                        <div class="score-title">BHS INGGRIS</div>
+                                        <div id="student-ing" class="score-value">-</div>
                                     </div>
                                 </div>
                             </div>
                             
-                            <div id="download-section" class="text-center mt-4 mb-3">
-                                <a id="download-btn" href="#" target="_blank" class="btn btn-download btn-lg py-2 px-4">
-                                    <i class="bi bi-cloud-arrow-down"></i> DOWNLOAD SKL (PDF)
+                            <div id="download-section" class="text-center mt-4 mb-3 p-3 bg-light rounded">
+                                <p class="mb-2 fw-medium">Dokumen Surat Keterangan Lulus:</p>
+                                <a id="download-btn" href="#" target="_blank" class="btn btn-download btn-lg px-5">
+                                    <i class="bi bi-file-earmark-pdf-fill"></i> DOWNLOAD SKL
                                 </a>
                             </div>
                             
                             <div class="text-center mt-4 border-top pt-3">
-                                <button id="back-btn" class="btn btn-outline-secondary">
+                                <button id="back-btn" class="btn btn-outline-secondary px-4">
                                     <i class="bi bi-arrow-left"></i> KEMBALI
                                 </button>
                             </div>
@@ -174,8 +167,8 @@
                 </div>
                 
                 <footer>
-                    <p class="mb-0">© 2026 SMP Negeri 4 Semin. Hak Cipta Dilindungi.</p>
-                    <p class="mb-0">Dikelola oleh Panitia Kelulusan SMPN 4 Semin</p>
+                    <p class="mb-0">© 2026 SMP Negeri 4 Semin. Seluruh Data Bersifat Resmi.</p>
+                    <p class="mb-0">Sistem Informasi Kelulusan Digital</p>
                 </footer>
             </div>
         </div>
@@ -185,14 +178,13 @@
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
     <script>
         let studentData = [];
-        const spreadsheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT9gsoHdsX2RGUQ-udFQ4L_MJNtxfBMTJ9_oTXKFDG9D4SLGygg1NQJMe2wbi44KuuKlASYKCRfozrg/pub?output=csv';
+        // GANTI LINK DI BAWAH DENGAN LINK CSV GOOGLE SHEETS ANDA
+        const spreadsheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSB3SUEHwVmNcBIA9n9W5c_zWOVqg2qtTn0krg0fRExpL4IPVoP_OALnMqL_jj_YZS9tePrIsRj6f08/pub?gid=0&single=true&output=csv';
 
-        // Load data dari Google Spreadsheet
         async function loadData() {
             try {
                 const response = await fetch(spreadsheetUrl);
                 const csvData = await response.text();
-                
                 Papa.parse(csvData, {
                     header: true,
                     skipEmptyLines: true,
@@ -203,34 +195,29 @@
                             ttl: row['TTL'] ? row['TTL'].trim() : '',
                             status: row['LULUS/TIDAK LULUS'],
                             sklLink: row['SKL'],
-                            lit: row['LIT'],
-                            num: row['NUM'],
-                            sains: row['SAINS']
+                            indo: row['IND'], // Kolom IND di Sheet
+                            mtk: row['MTK'],  // Kolom MTK di Sheet
+                            ipa: row['IPA'],  // Kolom IPA di Sheet
+                            ing: row['ING']   // Kolom ING di Sheet
                         }));
-                        console.log("Data loaded successfully");
                     }
                 });
-            } catch (error) {
-                console.error('Error:', error);
-            }
+            } catch (error) { console.error('Gagal memuat data'); }
         }
 
-        // Tampilkan Hasil
         function showResult(student) {
             document.getElementById('student-name').textContent = student.name;
             document.getElementById('student-nis').textContent = student.nis;
             document.getElementById('student-ttl').textContent = student.ttl;
-            document.getElementById('student-lit').textContent = student.lit || '0';
-            document.getElementById('student-num').textContent = student.num || '0';
-            document.getElementById('student-sains').textContent = student.sains || '0';
+            document.getElementById('student-indo').textContent = student.indo || '0';
+            document.getElementById('student-mtk').textContent = student.mtk || '0';
+            document.getElementById('student-ipa').textContent = student.ipa || '0';
+            document.getElementById('student-ing').textContent = student.ing || '0';
             
             const downloadBtn = document.getElementById('download-btn');
-            if (student.sklLink && student.sklLink !== '#') {
-                downloadBtn.href = student.sklLink;
-                downloadBtn.style.display = 'inline-block';
-            } else {
-                downloadBtn.style.display = 'none';
-            }
+            downloadBtn.href = (student.sklLink && student.sklLink !== '#') ? student.sklLink : '#';
+            if(downloadBtn.href === '#') downloadBtn.classList.add('disabled');
+            else downloadBtn.classList.remove('disabled');
             
             const statusContainer = document.getElementById('status-container');
             const isLulus = student.status.toUpperCase() === 'LULUS';
@@ -248,16 +235,14 @@
                 const ttlInput = document.getElementById('tgllahir-input').value.trim();
                 
                 if (!nisInput || !ttlInput) {
-                    alert('Mohon masukkan NIS dan Tanggal Lahir Anda');
+                    alert('Mohon masukkan NIS dan Tanggal Lahir');
                     return;
                 }
 
-                // Efek loading
                 document.getElementById('btn-text').style.display = 'none';
                 document.getElementById('spinner').style.display = 'inline-block';
 
                 setTimeout(() => {
-                    // Cari berdasarkan NIS DAN Tanggal Lahir (case-insensitive untuk TTL)
                     const student = studentData.find(s => 
                         s.nis === nisInput && 
                         s.ttl.toLowerCase() === ttlInput.toLowerCase()
@@ -266,19 +251,14 @@
                     document.getElementById('btn-text').style.display = 'inline';
                     document.getElementById('spinner').style.display = 'none';
 
-                    if (student) {
-                        showResult(student);
-                    } else {
-                        alert('Data tidak ditemukan. Pastikan NIS dan Tanggal Lahir (Format: Tempat, Tanggal Bulan Tahun) sudah benar.');
-                    }
-                }, 1000);
+                    if (student) showResult(student);
+                    else alert('Data tidak ditemukan! Periksa kembali NIS dan Format Tanggal Lahir.');
+                }, 800);
             });
 
             document.getElementById('back-btn').addEventListener('click', function() {
                 document.getElementById('login-form').style.display = 'block';
                 document.getElementById('result-container').style.display = 'none';
-                document.getElementById('nis-input').value = '';
-                document.getElementById('tgllahir-input').value = '';
             });
         });
     </script>
